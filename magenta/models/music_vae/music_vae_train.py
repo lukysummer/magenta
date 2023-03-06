@@ -19,7 +19,7 @@ from magenta.models.music_vae import configs
 from magenta.models.music_vae import data
 import tensorflow.compat.v1 as tf
 import tf_slim
-from torch.utils.tensorboard import SummaryWriter
+#from torch.utils.tensorboard import SummaryWriter
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
@@ -197,16 +197,7 @@ def train(train_dir,
 
       logging_dict = {'global_step': model.global_step,
                       'loss': model.loss}
-      print("#########################################################################")
-      print("#########################################################################")
-      print("#########################################################################")
-      print("#########################################################################")
-      print("model.loss type:", type(model.loss))
-      print("#########################################################################")
-      print("#########################################################################")
-      print("#########################################################################")
-      print("#########################################################################")
-      writer.add_scalar('train/loss', float(model.loss.numpy()), model.global_step)
+      #writer.add_scalar('train/loss', float(model.loss.numpy()), model.global_step)
 
       hooks.append(tf.train.LoggingTensorHook(logging_dict, every_n_iter=100))
       if num_steps:
