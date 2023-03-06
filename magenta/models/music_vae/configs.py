@@ -46,6 +46,33 @@ def update_config(config, update_dict):
 CONFIG_MAP = {}
 
 
+
+CONFIG_MAP['groovae_4bar_MusicVAE'] = Config(
+    model=MusicVAE(lstm_models.BidirectionalLstmEncoder(),
+                   lstm_models.CategoricalLstmDecoder()),
+    hparams=merge_hparams(
+        lstm_models.get_default_hparams(),
+        HParams(
+            batch_size=512,
+            max_seq_len=16 * 4,  # 4 bars w/ 16 steps per bar
+            z_size=256,
+            enc_rnn_size=[512],
+            dec_rnn_size=[256, 256],
+            max_beta=0.2,
+            free_bits=48,
+            dropout_keep_prob=0.3,
+        )),
+    note_sequence_augmenter=None,
+    data_converter=data.GrooveConverter(
+        split_bars=4, steps_per_quarter=4, quarters_per_bar=4,
+        max_tensors_per_notesequence=20,
+        pitch_classes=data.ROLAND_DRUM_PITCH_CLASSES,
+        inference_pitch_classes=data.REDUCED_DRUM_PITCH_CLASSES),
+    tfds_name='groove/4bar-midionly',
+)
+
+
+
 # Melody
 CONFIG_MAP['cat-mel_2bar_small'] = Config(
     model=MusicVAE(lstm_models.BidirectionalLstmEncoder(),
