@@ -24,10 +24,6 @@ import tf_slim
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 
-
-flags.DEFINE_string(
-    'tb_path', '',
-    'The TensorBoard directory to use.')
 flags.DEFINE_string(
     'master', '',
     'The TensorFlow master to use.')
@@ -86,7 +82,6 @@ flags.DEFINE_string(
     'The threshold for what messages will be logged: '
     'DEBUG, INFO, WARN, ERROR, or FATAL.')
 
-writer = SummaryWriter(FLAGS.tb_path)
 
 # Should not be called from within the graph to avoid redundant summaries.
 def _trial_summary(hparams, examples_path, output_dir):
