@@ -197,7 +197,7 @@ def train(train_dir,
 
       logging_dict = {'global_step': model.global_step,
                       'loss': model.loss}
-      writer.add_scalar('train/loss', float(model.loss), model.global_step)
+      writer.add_scalar('train/loss', float(model.loss.numpy()), model.global_step)
 
       hooks.append(tf.train.LoggingTensorHook(logging_dict, every_n_iter=100))
       if num_steps:
