@@ -63,11 +63,11 @@ CONFIG_MAP['groovae_4bar_MusicVAE'] = Config(
             dropout_keep_prob=0.3,
         )),
     note_sequence_augmenter=None,
-    data_converter=data.GrooveConverter(
-        split_bars=4, steps_per_quarter=4, quarters_per_bar=4,
-        max_tensors_per_notesequence=20,
-        pitch_classes=data.ROLAND_DRUM_PITCH_CLASSES,
-        inference_pitch_classes=data.REDUCED_DRUM_PITCH_CLASSES),
+    data_converter=data.DrumsConverter(
+        max_bars=100,  # Truncate long drum sequences before slicing.
+        slice_bars=2,
+        steps_per_quarter=4,
+        roll_input=True),
     tfds_name='groove/4bar-midionly',
 )
 
