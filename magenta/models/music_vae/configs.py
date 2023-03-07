@@ -46,29 +46,30 @@ def update_config(config, update_dict):
 CONFIG_MAP = {}
 
 
-
+# Custom config for training Music VAE with Groove MIDI Dataset
 CONFIG_MAP['groovae_4bar_MusicVAE'] = Config(
-    model=MusicVAE(lstm_models.BidirectionalLstmEncoder(),
-                   lstm_models.CategoricalLstmDecoder()),
+    model=MusicVAE(lstm_models.BidirectionalLstmEncoder(), # use bi-directional encoder to learn relationship in both directions
+                   lstm_models.CategoricalLstmDecoder()),  # use categorical decoder for outputting 512 categorical tokens
     hparams=merge_hparams(
         lstm_models.get_default_hparams(),
         HParams(
             batch_size=512,
             max_seq_len=16 * 4,  # 4 bars w/ 16 steps per bar
-            z_size=256,
-            enc_rnn_size=[512],
-            dec_rnn_size=[256, 256],
-            max_beta=0.2,
-            free_bits=48,
-            dropout_keep_prob=0.3,
+            z_size=256,  # dimension of z
+            enc_rnn_size=[512],       # 1-layer bi-directional lstm encoder with 512 hideen units
+            dec_rnn_size=[256, 256],  # 2-layer categorical lstm decoder with 256 hideen units for each layer
+            max_beta=0.2,  # make reconstruction loss signal 5 times stronger than KL latent loss signal
+            free_bits=48,  # use free bits to set a threshold for regularizing KL latent loss
+            dropout_keep_prob=0.3,  # dropout probability
         )),
     note_sequence_augmenter=None,
     data_converter=data.DrumsConverter(
         max_bars=100,  # Truncate long drum sequences before slicing.
-        slice_bars=4,
-        steps_per_quarter=4,
-        roll_input=True),
-    tfds_name='groove/4bar-midionly',
+        slice_bars=4,  # slice data into 4 bars
+        steps_per_quarter=4,  # quantize to 16th notes
+        roll_input=True,      # use piano-roll format for input sequence
+        roll_output=False),   # use one-hot encoded format for output sequence 
+    tfds_name='groove/4bar-midionly',  # use groove MIDI data hosted on tf dataset
 )
 
 
